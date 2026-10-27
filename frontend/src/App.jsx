@@ -41,7 +41,10 @@ import {
   CalendarCheck,
   CalendarX,
   MessageSquare,
-  FileText
+  FileText,
+  Menu,
+  ChevronDown,
+  RefreshCw
 } from 'lucide-react';
 import {
   apiUrl,
@@ -71,7 +74,7 @@ function Toast({ message, type, onClose }) {
 
   return (
     <div
-      className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3 rounded-xl border shadow-2xl backdrop-blur-md text-sm transition-all animate-bounce ${bg}`}
+      className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3.5 rounded-xl border shadow-2xl backdrop-blur-md text-sm animate-toast-enter ${bg}`}
     >
       {type === 'error' ? (
         <AlertTriangle size={18} className="text-rose-400 shrink-0" />
@@ -79,7 +82,7 @@ function Toast({ message, type, onClose }) {
         <CheckCircle2 size={18} className="text-emerald-400 shrink-0" />
       )}
       <span className="font-medium">{message}</span>
-      <button onClick={onClose} className="ml-2 hover:opacity-75">
+      <button onClick={onClose} className="ml-2 hover:opacity-75 transition-opacity">
         <X size={15} />
       </button>
     </div>
@@ -100,9 +103,8 @@ function RoleBadge({ role }) {
   const label = role ? role.replace('_', ' ') : 'GUEST';
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold border shadow-sm ${
-        styles[role] || 'bg-slate-900 text-slate-300 border-slate-700'
-      }`}
+      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold border shadow-sm ${styles[role] || 'bg-slate-900 text-slate-300 border-slate-700'
+        }`}
     >
       <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
       {label}
@@ -210,80 +212,145 @@ function Login({ onLoginSuccess }) {
     }
   }
 
+  const labs = [
+    {
+      name: "NORMAN LAB",
+      detail: "Design/development and solving complex problems in real-time environments",
+      accent: "bg-blue-400",
+    },
+    {
+      name: "MCCARTHY LAB",
+      detail: "Machine-learning pipelines and natural-language processing",
+      accent: "bg-violet-400",
+    },
+    {
+      name: "PAUSCH LAB",
+      detail: "Augmented and virtual reality",
+      accent: "bg-fuchsia-400",
+    },
+    {
+      name: "TESLA LAB",
+      detail: "Autonomous systems",
+      accent: "bg-cyan-400",
+    },
+    {
+      name: "SATOSHI LAB",
+      detail: "Security protocols and infrastructure",
+      accent: "bg-emerald-400",
+    },
+  ];
+
   return (
     <main className="min-h-screen bg-slate-950 flex flex-col lg:flex-row relative overflow-hidden font-sans">
       {/* Background Glow */}
-      <div className="absolute top-0 -left-40 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 -right-40 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 -left-40 w-96 h-96 bg-indigo-600/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 -right-40 w-96 h-96 bg-purple-600/15 rounded-full blur-3xl pointer-events-none" />
 
       {/* Left Column: Platform Branding */}
-      <div className="lg:w-7/12 p-8 lg:p-16 flex flex-col justify-between z-10 border-b lg:border-b-0 lg:border-r border-slate-800/80 bg-slate-950/40 backdrop-blur-xl">
+      <div className="lg:w-7/12 p-8 lg:p-16 flex flex-col justify-between z-10 border-b lg:border-b-0 lg:border-r border-slate-800/60 bg-slate-950/40 backdrop-blur-xl">
         <div>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
-              <Boxes size={22} />
+          {/* Logo + Brand */}
+          <div className="flex items-center gap-3.5">
+            <div className="h-11 w-14 rounded-lg bg-white p-1.5 flex items-center justify-center shadow-sm">
+              <img
+                src="/ntl-logo.png"
+                alt="NTL — NextTech Lab"
+                className="h-full w-full object-contain"
+              />
             </div>
             <div>
-              <span className="text-xl font-extrabold tracking-tight text-white">CORTEX</span>
-              <span className="ml-1 text-xs px-2 py-0.5 rounded-full bg-indigo-950 border border-indigo-700/50 text-indigo-400 font-mono">
-                LABS
+              <span className="text-xl font-extrabold tracking-tight text-white">
+                NTL
+              </span>
+              <span className="ml-2.5 text-[11px] px-2.5 py-0.5 rounded-full bg-indigo-950/80 border border-indigo-700/40 text-indigo-300 font-medium tracking-wide">
+                NEXTTECH LAB
               </span>
             </div>
           </div>
 
+          {/* Hero Content */}
           <div className="mt-12 max-w-xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs text-indigo-400 font-medium mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/80 border border-slate-800 text-xs text-indigo-400 font-medium mb-5">
               <Sparkles size={14} className="text-indigo-400" />
-              <span>Interview Orchestration & Evaluation Engine</span>
+              <span>INTERVIEW MANAGEMENT PLATFORM</span>
             </div>
+
             <h1 className="text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.15]">
-              Syndicate Recruitment & Candidate Growth Platform
+              Build skills.
+              <span className="block text-indigo-400 mt-1">
+                Prove your potential.
+              </span>
             </h1>
-            <p className="mt-4 text-base text-slate-400 leading-relaxed">
-              Super Admin interview scheduling, conflict-free atomic candidate booking, immutable evaluation feedback, and actionable improvement task tracking.
+
+            <p className="mt-5 text-base text-slate-400 leading-relaxed max-w-lg">
+              A structured interview platform for lab recruitment, candidate evaluation,
+              and personalized improvement roadmaps across NextTech Lab.
             </p>
           </div>
 
-          {/* Quick Metrics */}
-          <div className="grid grid-cols-3 gap-4 mt-8 max-w-lg">
-            <div className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800/80">
-              <span className="text-2xl font-black text-white">100%</span>
-              <p className="text-xs text-slate-400 mt-0.5">Atomic Anti-Conflict</p>
+          {/* NTL Lab Domains */}
+          <div className="mt-10">
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-slate-500 mb-3">
+              Five Research Labs
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              {labs.map((lab) => (
+                <div
+                  key={lab.name}
+                  className="rounded-xl border border-slate-800/60 bg-slate-900/40 p-3.5 flex items-start gap-3 hover:border-slate-700/80 transition-colors"
+                >
+                  <div className={`w-2 h-2 rounded-full ${lab.accent} mt-1 shrink-0`} />
+                  <div>
+                    <p className="text-xs font-bold text-white tracking-wide">{lab.name}</p>
+                    <p className="mt-0.5 text-[11px] text-slate-400 leading-relaxed">{lab.detail}</p>
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800/80">
-              <span className="text-2xl font-black text-indigo-400">Immutable</span>
-              <p className="text-xs text-slate-400 mt-0.5">Feedback History</p>
+          </div>
+
+          {/* Platform Features */}
+          <div className="grid grid-cols-3 gap-3 mt-8 max-w-lg">
+            <div className="p-3.5 rounded-xl bg-slate-900/50 border border-slate-800/60">
+              <span className="text-lg font-black text-white">100%</span>
+              <p className="text-[11px] text-slate-400 mt-0.5">Conflict-Free Booking</p>
             </div>
-            <div className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800/80">
-              <span className="text-2xl font-black text-emerald-400">RBAC</span>
-              <p className="text-xs text-slate-400 mt-0.5">PostgreSQL & Neon</p>
+            <div className="p-3.5 rounded-xl bg-slate-900/50 border border-slate-800/60">
+              <span className="text-lg font-black text-indigo-400">Immutable</span>
+              <p className="text-[11px] text-slate-400 mt-0.5">Feedback History</p>
+            </div>
+            <div className="p-3.5 rounded-xl bg-slate-900/50 border border-slate-800/60">
+              <span className="text-lg font-black text-emerald-400">RBAC</span>
+              <p className="text-[11px] text-slate-400 mt-0.5">Role-Based Access</p>
             </div>
           </div>
         </div>
 
+        {/* Footer */}
         <div className="mt-10 flex items-center gap-6 text-xs text-slate-500">
           <span className="flex items-center gap-1.5">
             <Database size={14} className="text-emerald-400" /> Neon PostgreSQL
           </span>
           <span className="flex items-center gap-1.5">
-            <Lock size={14} className="text-indigo-400" /> Signed JWT Sessions
+            <Lock size={14} className="text-indigo-400" /> JWT Sessions
           </span>
-          <span>© 2026 Cortex Labs</span>
+          <span>© 2026 NTL</span>
         </div>
       </div>
 
       {/* Right Column: Instant Role Access & Google Login */}
       <div className="lg:w-5/12 p-6 lg:p-12 flex items-center justify-center z-10">
-        <div className="w-full max-w-md p-8 rounded-3xl bg-slate-900/80 border border-slate-800/90 shadow-2xl backdrop-blur-2xl">
+        <div className="w-full max-w-md p-7 rounded-2xl bg-slate-900/70 border border-slate-800/80 shadow-2xl backdrop-blur-2xl">
           <div className="text-left mb-6">
-            <h2 className="text-2xl font-bold text-white tracking-tight">Access Platform</h2>
-            <p className="text-xs text-slate-400 mt-1">
-              Select an account role below to instantly launch the respective panel
+            <h2 className="text-xl font-bold text-white tracking-tight">Access Platform</h2>
+            <p className="text-sm text-slate-400 mt-1.5 leading-relaxed">
+              Select a demo account to instantly access the platform, or sign in with Google.
             </p>
           </div>
 
           {error && (
-            <div className="mb-5 p-3 rounded-xl bg-rose-950/60 border border-rose-800/80 text-rose-300 text-xs flex items-center gap-2">
+            <div className="mb-5 p-3.5 rounded-xl bg-rose-950/50 border border-rose-800/60 text-rose-300 text-xs flex items-center gap-2.5">
               <AlertTriangle size={15} className="shrink-0" />
               <span>{error}</span>
             </div>
@@ -291,68 +358,80 @@ function Login({ onLoginSuccess }) {
 
           {/* TWO PRIMARY REQUIRED PANELS */}
           <div className="space-y-3 mb-6">
-            <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-              Primary System Panels
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+              Demo Accounts
             </p>
 
             {/* SUPER ADMIN PANEL */}
             <button
               onClick={() => handleDemoLogin('SUPER_ADMIN')}
               disabled={loadingRole !== null}
-              className="w-full p-4 text-left rounded-2xl bg-purple-950/30 hover:bg-purple-900/40 border border-purple-700/60 hover:border-purple-500 transition shadow-lg shadow-purple-950/30 flex items-center justify-between group"
+              className="w-full p-4 text-left rounded-xl bg-purple-950/25 hover:bg-purple-950/40 border border-purple-800/40 hover:border-purple-600/60 transition-all shadow-sm flex items-center justify-between group disabled:opacity-60 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
             >
               <div className="flex items-center gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-purple-600/30 border border-purple-500/40 flex items-center justify-center text-purple-300 font-bold text-lg">
+                <div className="w-10 h-10 rounded-lg bg-purple-600/20 border border-purple-500/30 flex items-center justify-center text-purple-300 font-bold text-lg">
                   👑
                 </div>
                 <div>
                   <span className="text-sm font-bold text-white flex items-center gap-2">
-                    Super Admin Panel
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-900/80 text-purple-300 font-mono">
-                      Syndicate Admin
+                    Super Admin
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-900/60 text-purple-300 font-medium">
+                      Full Access
                     </span>
                   </span>
-                  <p className="text-xs text-purple-200/70 mt-0.5">
-                    Dr. Elena Rostova • Slots, Scheduling, Feedback & Tasks
+                  <p className="text-[11px] text-purple-200/60 mt-0.5">
+                    Dr. Elena Rostova · Slots, Scheduling, Feedback & Tasks
                   </p>
                 </div>
               </div>
-              <ChevronRight size={18} className="text-purple-400 group-hover:translate-x-1 transition" />
+              <div className="shrink-0">
+                {loadingRole === 'SUPER_ADMIN' ? (
+                  <div className="w-5 h-5 border-2 border-purple-400 border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <ChevronRight size={18} className="text-purple-400/60 group-hover:translate-x-0.5 group-hover:text-purple-300 transition-all" />
+                )}
+              </div>
             </button>
 
             {/* CANDIDATE PANEL */}
             <button
               onClick={() => handleDemoLogin('CANDIDATE', 'candidate.demo@labsystem.org')}
               disabled={loadingRole !== null}
-              className="w-full p-4 text-left rounded-2xl bg-cyan-950/30 hover:bg-cyan-900/40 border border-cyan-700/60 hover:border-cyan-500 transition shadow-lg shadow-cyan-950/30 flex items-center justify-between group"
+              className="w-full p-4 text-left rounded-xl bg-cyan-950/25 hover:bg-cyan-950/40 border border-cyan-800/40 hover:border-cyan-600/60 transition-all shadow-sm flex items-center justify-between group disabled:opacity-60 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
             >
               <div className="flex items-center gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-cyan-600/30 border border-cyan-500/40 flex items-center justify-center text-cyan-300 font-bold text-lg">
+                <div className="w-10 h-10 rounded-lg bg-cyan-600/20 border border-cyan-500/30 flex items-center justify-center text-cyan-300 font-bold text-lg">
                   🎓
                 </div>
                 <div>
                   <span className="text-sm font-bold text-white flex items-center gap-2">
-                    Candidate Panel
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-900/80 text-cyan-300 font-mono">
+                    Candidate
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-900/60 text-cyan-300 font-medium">
                       Applicant
                     </span>
                   </span>
-                  <p className="text-xs text-cyan-200/70 mt-0.5">
-                    Alex Rivera • Browse Slots, Bookings, Feedback & Tasks
+                  <p className="text-[11px] text-cyan-200/60 mt-0.5">
+                    Alex Rivera · Browse Slots, Bookings, Feedback & Tasks
                   </p>
                 </div>
               </div>
-              <ChevronRight size={18} className="text-cyan-400 group-hover:translate-x-1 transition" />
+              <div className="shrink-0">
+                {loadingRole === 'CANDIDATE' || loadingRole === 'candidate.demo@labsystem.org' ? (
+                  <div className="w-5 h-5 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <ChevronRight size={18} className="text-cyan-400/60 group-hover:translate-x-0.5 group-hover:text-cyan-300 transition-all" />
+                )}
+              </div>
             </button>
           </div>
 
           {/* Divider */}
           <div className="relative my-5">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-800" />
+              <div className="w-full border-t border-slate-800/80" />
             </div>
-            <div className="relative flex justify-center text-[10px] uppercase font-bold tracking-widest text-slate-500">
-              <span className="bg-slate-900 px-3">Other Demo Roles & Google Auth</span>
+            <div className="relative flex justify-center text-[10px] uppercase font-semibold tracking-widest text-slate-500">
+              <span className="bg-slate-900 px-3">More Options</span>
             </div>
           </div>
 
@@ -361,36 +440,36 @@ function Login({ onLoginSuccess }) {
             <button
               onClick={() => handleDemoLogin('SYNDICATE_LEAD')}
               disabled={loadingRole !== null}
-              className="p-2.5 text-left rounded-xl bg-slate-950/60 hover:bg-slate-800 border border-slate-800 text-xs transition"
+              className="p-3 text-left rounded-xl bg-slate-950/50 hover:bg-slate-800/70 border border-slate-800/60 hover:border-slate-700 text-xs transition-all disabled:opacity-60 disabled:cursor-not-allowed"
             >
               <span className="font-semibold text-sky-400 block">🛡️ Syndicate Lead</span>
-              <span className="text-[10px] text-slate-400">Aria Chen</span>
+              <span className="text-[10px] text-slate-400 mt-0.5 block">Aria Chen</span>
             </button>
             <button
               onClick={() => handleDemoLogin('CANDIDATE', 'candidate.maya@labsystem.org')}
               disabled={loadingRole !== null}
-              className="p-2.5 text-left rounded-xl bg-slate-950/60 hover:bg-slate-800 border border-slate-800 text-xs transition"
+              className="p-3 text-left rounded-xl bg-slate-950/50 hover:bg-slate-800/70 border border-slate-800/60 hover:border-slate-700 text-xs transition-all disabled:opacity-60 disabled:cursor-not-allowed"
             >
               <span className="font-semibold text-cyan-400 block">👩‍💻 Candidate 2</span>
-              <span className="text-[10px] text-slate-400">Maya Lin (Privacy Test)</span>
+              <span className="text-[10px] text-slate-400 mt-0.5 block">Maya Lin (Privacy Test)</span>
             </button>
           </div>
 
-          {/* Google OAuth Modal Button */}
+          {/* Google OAuth Button */}
           <button
             onClick={() => { window.location.href = `${apiUrl}/api/auth/google`; }}
-            className="w-full flex items-center justify-center gap-3 px-4 py-2.5 rounded-xl font-semibold text-xs text-slate-300 bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 transition"
+            className="w-full flex items-center justify-center gap-3 px-4 py-2.5 rounded-xl font-semibold text-sm text-slate-300 bg-slate-800/60 hover:bg-slate-700/70 border border-slate-700/60 hover:border-slate-600 transition-all focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
           >
-            <Mail size={15} />
-            <span>Sign in with Google Credentials</span>
+            <Mail size={16} />
+            <span>Continue with Google</span>
           </button>
         </div>
       </div>
 
       {/* Google Account Modal */}
       {googleModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl relative">
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 animate-modal-overlay">
+          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl relative animate-modal-content">
             <button
               onClick={() => setGoogleModal(false)}
               className="absolute top-4 right-4 text-slate-400 hover:text-white transition"
@@ -403,13 +482,13 @@ function Login({ onLoginSuccess }) {
               </div>
               <div>
                 <h3 className="font-bold text-base text-white">Google Sign-In</h3>
-                <p className="text-xs text-slate-400">Enter your Gmail to authenticate into Cortex</p>
+                <p className="text-xs text-slate-400">Sign in securely with your Google account to access NTL</p>
               </div>
             </div>
 
             <form onSubmit={handleCustomGoogleSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
                   Google Email Address
                 </label>
                 <input
@@ -418,24 +497,24 @@ function Login({ onLoginSuccess }) {
                   value={customEmail}
                   onChange={(e) => setCustomEmail(e.target.value)}
                   placeholder="e.g. yuvrajsingh@gmail.com"
-                  className="w-full text-sm rounded-xl bg-slate-950 border border-slate-700 text-white px-3.5 py-2.5 focus:border-indigo-500 focus:outline-none"
+                  className="w-full text-sm rounded-xl bg-slate-950 border border-slate-700/80 text-white px-3.5 py-2.5 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500/30 transition-colors"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Full Name</label>
+                <label className="block text-xs font-semibold text-slate-300 mb-1.5">Full Name</label>
                 <input
                   type="text"
                   value={customName}
                   onChange={(e) => setCustomName(e.target.value)}
                   placeholder="e.g. Yuvraj Singh"
-                  className="w-full text-sm rounded-xl bg-slate-950 border border-slate-700 text-white px-3.5 py-2.5 focus:border-indigo-500 focus:outline-none"
+                  className="w-full text-sm rounded-xl bg-slate-950 border border-slate-700/80 text-white px-3.5 py-2.5 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500/30 transition-colors"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={submittingCustom || !customEmail}
-                className="w-full py-2.5 rounded-xl font-semibold text-sm text-white bg-indigo-600 hover:bg-indigo-500 shadow-lg shadow-indigo-600/30 transition disabled:opacity-50"
+                className="w-full py-2.5 rounded-xl font-semibold text-sm text-white bg-indigo-600 hover:bg-indigo-500 shadow-lg shadow-indigo-600/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {submittingCustom ? 'Signing In...' : 'Continue to Dashboard'}
               </button>
@@ -443,10 +522,9 @@ function Login({ onLoginSuccess }) {
           </div>
         </div>
       )}
-    </main>
+    </main >
   );
 }
-
 // ==========================================
 // CALLBACK HANDLER
 // ==========================================
@@ -494,7 +572,7 @@ function Sidebar({ user, activeTab, setActiveTab, onLogout }) {
             <Boxes size={18} />
           </div>
           <div>
-            <span className="font-extrabold text-sm tracking-tight text-white">CORTEX LABS</span>
+            <span className="font-extrabold text-sm tracking-tight text-white">NTL</span>
             <span className="block text-[10px] text-indigo-400 font-mono">
               {isAdmin ? 'ADMIN CONTROL' : 'CANDIDATE PORTAL'}
             </span>
@@ -517,11 +595,10 @@ function Sidebar({ user, activeTab, setActiveTab, onLogout }) {
             <>
               <button
                 onClick={() => setActiveTab('slots')}
-                className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition ${
-                  activeTab === 'slots'
-                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                    : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
-                }`}
+                className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition ${activeTab === 'slots'
+                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
+                  : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
+                  }`}
               >
                 <Calendar size={16} />
                 <span>Interview Slots</span>
@@ -529,11 +606,10 @@ function Sidebar({ user, activeTab, setActiveTab, onLogout }) {
 
               <button
                 onClick={() => setActiveTab('candidates')}
-                className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition ${
-                  activeTab === 'candidates'
-                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                    : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
-                }`}
+                className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition ${activeTab === 'candidates'
+                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
+                  : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
+                  }`}
               >
                 <Users size={16} />
                 <span>Candidates & Feedback</span>
@@ -541,11 +617,10 @@ function Sidebar({ user, activeTab, setActiveTab, onLogout }) {
 
               <button
                 onClick={() => setActiveTab('overview')}
-                className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition ${
-                  activeTab === 'overview'
-                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                    : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
-                }`}
+                className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition ${activeTab === 'overview'
+                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
+                  : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
+                  }`}
               >
                 <BarChart3 size={16} />
                 <span>Overview & Metrics</span>
@@ -553,11 +628,10 @@ function Sidebar({ user, activeTab, setActiveTab, onLogout }) {
 
               <button
                 onClick={() => setActiveTab('syndicates')}
-                className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition ${
-                  activeTab === 'syndicates'
-                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                    : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
-                }`}
+                className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition ${activeTab === 'syndicates'
+                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
+                  : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
+                  }`}
               >
                 <Layers size={16} />
                 <span>Syndicates & Quotas</span>
@@ -568,11 +642,10 @@ function Sidebar({ user, activeTab, setActiveTab, onLogout }) {
             <>
               <button
                 onClick={() => setActiveTab('available-slots')}
-                className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition ${
-                  activeTab === 'available-slots'
-                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                    : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
-                }`}
+                className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition ${activeTab === 'available-slots'
+                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
+                  : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
+                  }`}
               >
                 <Calendar size={16} />
                 <span>Available Slots</span>
@@ -580,11 +653,10 @@ function Sidebar({ user, activeTab, setActiveTab, onLogout }) {
 
               <button
                 onClick={() => setActiveTab('my-bookings')}
-                className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition ${
-                  activeTab === 'my-bookings'
-                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                    : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
-                }`}
+                className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition ${activeTab === 'my-bookings'
+                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
+                  : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
+                  }`}
               >
                 <CalendarCheck size={16} />
                 <span>My Interviews</span>
@@ -592,11 +664,10 @@ function Sidebar({ user, activeTab, setActiveTab, onLogout }) {
 
               <button
                 onClick={() => setActiveTab('my-feedback')}
-                className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition ${
-                  activeTab === 'my-feedback'
-                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                    : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
-                }`}
+                className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition ${activeTab === 'my-feedback'
+                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
+                  : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
+                  }`}
               >
                 <Award size={16} />
                 <span>Feedback & Reviews</span>
@@ -604,11 +675,10 @@ function Sidebar({ user, activeTab, setActiveTab, onLogout }) {
 
               <button
                 onClick={() => setActiveTab('my-tasks')}
-                className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition ${
-                  activeTab === 'my-tasks'
-                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                    : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
-                }`}
+                className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition ${activeTab === 'my-tasks'
+                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
+                  : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
+                  }`}
               >
                 <ListTodo size={16} />
                 <span>Improvement Tasks</span>
@@ -618,11 +688,10 @@ function Sidebar({ user, activeTab, setActiveTab, onLogout }) {
 
           <button
             onClick={() => setActiveTab('profile')}
-            className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition ${
-              activeTab === 'profile'
-                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
-            }`}
+            className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition ${activeTab === 'profile'
+              ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
+              : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
+              }`}
           >
             <UserCircle size={16} />
             <span>My Profile</span>
@@ -762,11 +831,10 @@ function AdminSlotsTab({ showToast }) {
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`px-3 py-1.5 rounded-xl font-semibold transition ${
-              filter === f
-                ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-600/30'
-                : 'bg-slate-900/80 text-slate-400 hover:bg-slate-800 hover:text-slate-200 border border-slate-800'
-            }`}
+            className={`px-3 py-1.5 rounded-xl font-semibold transition ${filter === f
+              ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-600/30'
+              : 'bg-slate-900/80 text-slate-400 hover:bg-slate-800 hover:text-slate-200 border border-slate-800'
+              }`}
           >
             {f} {f === 'ALL' ? `(${slots.length})` : `(${slots.filter((s) => s.status === f).length})`}
           </button>
@@ -803,13 +871,12 @@ function AdminSlotsTab({ showToast }) {
                   <div className="flex items-start justify-between gap-2">
                     <span className="text-sm font-bold text-white line-clamp-1">{slot.title}</span>
                     <span
-                      className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold border uppercase shrink-0 ${
-                        slot.status === 'AVAILABLE'
-                          ? 'bg-emerald-950/80 text-emerald-300 border-emerald-700/60'
-                          : slot.status === 'BOOKED'
+                      className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold border uppercase shrink-0 ${slot.status === 'AVAILABLE'
+                        ? 'bg-emerald-950/80 text-emerald-300 border-emerald-700/60'
+                        : slot.status === 'BOOKED'
                           ? 'bg-sky-950/80 text-sky-300 border-sky-700/60'
                           : 'bg-rose-950/80 text-rose-300 border-rose-700/60'
-                      }`}
+                        }`}
                     >
                       {slot.status}
                     </span>
@@ -1729,13 +1796,12 @@ function CandidateBookingsTab({ showToast, onNavigateSlots }) {
                       {b.slot?.title || 'Technical Assessment'}
                     </span>
                     <span
-                      className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold border uppercase shrink-0 ${
-                        isConfirmed
-                          ? 'bg-sky-950/80 text-sky-300 border-sky-700/60'
-                          : b.status === 'COMPLETED'
+                      className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold border uppercase shrink-0 ${isConfirmed
+                        ? 'bg-sky-950/80 text-sky-300 border-sky-700/60'
+                        : b.status === 'COMPLETED'
                           ? 'bg-emerald-950/80 text-emerald-300 border-emerald-700/60'
                           : 'bg-rose-950/80 text-rose-300 border-rose-700/60'
-                      }`}
+                        }`}
                     >
                       {b.status}
                     </span>
@@ -1983,11 +2049,10 @@ function CandidateTasksTab({ showToast }) {
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`px-3 py-1.5 rounded-xl font-semibold transition ${
-              filter === f
-                ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-600/30'
-                : 'bg-slate-900/80 text-slate-400 hover:bg-slate-800 border border-slate-800'
-            }`}
+            className={`px-3 py-1.5 rounded-xl font-semibold transition ${filter === f
+              ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-600/30'
+              : 'bg-slate-900/80 text-slate-400 hover:bg-slate-800 border border-slate-800'
+              }`}
           >
             {f} {f === 'ALL' ? `(${tasks.length})` : `(${tasks.filter((t) => t.status === f).length})`}
           </button>
@@ -2018,13 +2083,12 @@ function CandidateTasksTab({ showToast }) {
                 <div className="flex items-center gap-3">
                   <span className="font-bold text-white text-sm">{task.title}</span>
                   <span
-                    className={`text-[10px] px-2 py-0.5 rounded-full font-bold border uppercase ${
-                      task.status === 'COMPLETED'
-                        ? 'bg-emerald-950/80 text-emerald-300 border-emerald-700/60'
-                        : task.status === 'IN_PROGRESS'
+                    className={`text-[10px] px-2 py-0.5 rounded-full font-bold border uppercase ${task.status === 'COMPLETED'
+                      ? 'bg-emerald-950/80 text-emerald-300 border-emerald-700/60'
+                      : task.status === 'IN_PROGRESS'
                         ? 'bg-sky-950/80 text-sky-300 border-sky-700/60'
                         : 'bg-amber-950/80 text-amber-300 border-amber-700/60'
-                    }`}
+                      }`}
                   >
                     {task.status.replace('_', ' ')}
                   </span>
@@ -2501,7 +2565,7 @@ function Dashboard({ user, onLogout }) {
         {/* Top Navbar */}
         <header className="h-16 border-b border-slate-800/80 px-8 flex items-center justify-between bg-slate-950/70 backdrop-blur-md sticky top-0 z-30">
           <div className="flex items-center gap-2 text-xs">
-            <span className="text-slate-400">Cortex</span>
+            <span className="text-slate-400">NTL</span>
             <span className="text-slate-600">/</span>
             <span className="text-white font-semibold capitalize">
               {activeTab.replace('-', ' ')}
@@ -2605,7 +2669,7 @@ export default function App() {
       <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white font-sans">
         <div className="flex items-center gap-3">
           <div className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
-          <span className="text-xs font-mono text-slate-300">Initializing Cortex Platform...</span>
+          <span className="text-xs font-mono text-slate-300">Initializing NTL Platform...</span>
         </div>
       </div>
     );

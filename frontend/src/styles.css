@@ -6,6 +6,16 @@
   body {
     @apply bg-slate-950 text-slate-100 font-sans;
   }
+
+  /* Consistent focus visible states for accessibility */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-indigo-500;
+  }
+
+  /* Remove default focus outline for non-keyboard users */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
 }
 
 /* Custom scrollbars */
@@ -49,4 +59,95 @@
     radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
     radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.12) 0px, transparent 50%),
     radial-gradient(at 50% 100%, rgba(59, 130, 246, 0.1) 0px, transparent 50%);
+}
+
+/* Toast enter animation - subtle slide up + fade in */
+@keyframes toast-enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-toast-enter {
+  animation: toast-enter 0.3s ease-out forwards;
+}
+
+/* Sidebar mobile overlay */
+@keyframes sidebar-enter {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-sidebar-enter {
+  animation: sidebar-enter 0.25s ease-out forwards;
+}
+
+/* Subtle fade-in for page content transitions */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.25s ease-out forwards;
+}
+
+/* Modal backdrop animation */
+@keyframes modal-overlay {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modal-content {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-modal-overlay {
+  animation: modal-overlay 0.2s ease-out forwards;
+}
+
+.animate-modal-content {
+  animation: modal-content 0.25s ease-out forwards;
+}
+
+/* Select styling for dark theme */
+select option {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+/* Date/time input fixes for dark mode */
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.7);
+  cursor: pointer;
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
 }
