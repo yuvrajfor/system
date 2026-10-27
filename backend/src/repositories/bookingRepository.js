@@ -15,11 +15,11 @@ function findBookingById(id) {
     include: defaultInclude,
   });
 }
-
 function findBookingBySlotId(slotId) {
-  return prisma.booking.findUnique({
-    where: { slotId },
+  return prisma.booking.findFirst({
+    where: { slotId, status: 'CONFIRMED' },
     include: defaultInclude,
+    orderBy: { createdAt: 'desc' },
   });
 }
 
@@ -42,9 +42,11 @@ function findAllBookings() {
  * Atomically books a slot.
  * Guarantees race-condition prevention and no double-booking.
  */
+/**
+ * Atomically books a slot without allowing double booking.
+ */
 async function bookSlotAtomic({ slotId, candidateId, notes }) {
   return prisma.$transaction(async (tx) => {
-    // 1. Fetch the slot inside the transaction
     const slot = await tx.interviewSlot.findUnique({
       where: { id: slotId },
     });
@@ -61,11 +63,16 @@ async function bookSlotAtomic({ slotId, candidateId, notes }) {
           ? 'This interview slot has already been booked by another candidate.'
           : 'This interview slot is no longer available.'
       );
-      err.statusCode = 409; // Conflict
+      err.statusCode = 409;
       throw err;
     }
 
-    // 2. Check if candidate already has an active booking for this exact slot
+    if (slot.startTime <= new Date()) {
+      const err = new Error('Past interview slots cannot be booked.');
+      err.statusCode = 409;
+      throw err;
+    }
+
     const existingCandidateBooking = await tx.booking.findFirst({
       where: {
         slotId,
@@ -75,13 +82,32 @@ async function bookSlotAtomic({ slotId, candidateId, notes }) {
     });
 
     if (existingCandidateBooking) {
-      const err = new Error('You already have a confirmed booking for this slot.');
+      const err = new Error(
+        'You already have a confirmed booking for this slot.'
+      );
       err.statusCode = 400;
       throw err;
     }
 
-    // 3. Create the booking
-    const booking = await tx.booking.create({
+    // Claim the slot only if it is still available.
+    const claim = await tx.interviewSlot.updateMany({
+      where: {
+        id: slotId,
+        status: 'AVAILABLE',
+        startTime: { gt: new Date() },
+      },
+      data: { status: 'BOOKED' },
+    });
+
+    if (claim.count !== 1) {
+      const err = new Error(
+        'This interview slot is no longer available. Please refresh and try again.'
+      );
+      err.statusCode = 409;
+      throw err;
+    }
+
+    return tx.booking.create({
       data: {
         slotId,
         candidateId,
@@ -90,19 +116,15 @@ async function bookSlotAtomic({ slotId, candidateId, notes }) {
       },
       include: defaultInclude,
     });
-
-    // 4. Update the slot status to BOOKED
-    await tx.interviewSlot.update({
-      where: { id: slotId },
-      data: { status: 'BOOKED' },
-    });
-
-    return booking;
   });
 }
 
 /**
  * Atomically cancels a booking and frees the slot.
+ */
+/**
+ * Cancels a confirmed booking and frees its slot.
+ * Preserves the booking record for history.
  */
 async function cancelBookingAtomic(bookingId) {
   return prisma.$transaction(async (tx) => {
@@ -122,20 +144,50 @@ async function cancelBookingAtomic(bookingId) {
       throw err;
     }
 
-    // 1. Set booking status to CANCELLED
-    const updatedBooking = await tx.booking.update({
-      where: { id: bookingId },
+    if (booking.status === 'COMPLETED') {
+      const err = new Error('Completed bookings cannot be cancelled.');
+      err.statusCode = 400;
+      throw err;
+    }
+
+    // Cancel only if the booking is still confirmed.
+    const cancellation = await tx.booking.updateMany({
+      where: {
+        id: bookingId,
+        status: 'CONFIRMED',
+      },
       data: { status: 'CANCELLED' },
-      include: defaultInclude,
     });
 
-    // 2. Re-open slot as AVAILABLE
-    await tx.interviewSlot.update({
-      where: { id: booking.slotId },
+    if (cancellation.count !== 1) {
+      const err = new Error(
+        'This booking has changed. Refresh and try again.'
+      );
+      err.statusCode = 409;
+      throw err;
+    }
+
+    // Reopen only a slot that is currently booked.
+    const reopenedSlot = await tx.interviewSlot.updateMany({
+      where: {
+        id: booking.slotId,
+        status: 'BOOKED',
+      },
       data: { status: 'AVAILABLE' },
     });
 
-    return updatedBooking;
+    if (reopenedSlot.count !== 1) {
+      const err = new Error(
+        'The slot could not be reopened. Please contact the administrator.'
+      );
+      err.statusCode = 409;
+      throw err;
+    }
+
+    return tx.booking.findUnique({
+      where: { id: bookingId },
+      include: defaultInclude,
+    });
   });
 }
 

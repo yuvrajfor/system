@@ -6,9 +6,9 @@ function configure(passport) {
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
 
   if (!clientID || !clientSecret || clientID.includes('your-google-client-id')) {
-    console.warn('⚠️  Real GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET not configured.');
-    console.warn('👉  Google OAuth will be available as soon as real credentials are added in .env.');
-    console.warn('👉  Quick Demo logins are enabled on frontend and backend for testing.');
+    console.warn('  Real GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET not configured.');
+    console.warn('  Google OAuth will be available as soon as real credentials are added in .env.');
+    console.warn('  Quick Demo logins are enabled on frontend and backend for testing.');
     return;
   }
 

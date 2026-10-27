@@ -18,7 +18,7 @@ function googleCallback(req, res, next) {
 
     const token = jwt.sign(
       { googleId: user.googleId, id: user.id, role: user.role },
-      process.env.JWT_SECRET || 'lab_management_jwt_default_secret_key',
+      process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
 
@@ -26,40 +26,19 @@ function googleCallback(req, res, next) {
   })(req, res, next);
 }
 
-async function googleSignInCustom(req, res, next) {
-  try {
-    const { email, name } = req.body;
-    if (!email) {
-      return res.status(400).json({ message: 'Email is required.' });
-    }
-    const cleanEmail = email.trim().toLowerCase();
-    const cleanName = (name && name.trim()) || cleanEmail.split('@')[0];
-    const googleId = 'google-' + Buffer.from(cleanEmail).toString('hex').slice(0, 16);
-
-    const isInitialAdmin =
-      process.env.INITIAL_SUPER_ADMIN_EMAIL &&
-      cleanEmail === process.env.INITIAL_SUPER_ADMIN_EMAIL.toLowerCase();
-
-    const user = await members.upsertGoogleUser({
-      googleId,
-      email: cleanEmail,
-      name: cleanName,
-      ...(isInitialAdmin ? { role: 'SUPER_ADMIN' } : {}),
-    });
-
-    const token = jwt.sign(
-      { googleId: user.googleId, id: user.id, role: user.role },
-      process.env.JWT_SECRET || 'lab_management_jwt_default_secret_key',
-      { expiresIn: '7d' }
-    );
-
-    res.json({ token, user });
-  } catch (err) {
-    next(err);
-  }
+async function googleSignInCustom(req, res) {
+  return res.status(410).json({
+    message:
+      'This sign-in method is no longer supported. Please use Google OAuth.'
+  });
 }
-
 async function demoLogin(req, res, next) {
+  if (process.env.NODE_ENV === 'production' &&
+    process.env.ENABLE_DEMO_LOGIN !== 'true') {
+    return res.status(403).json({
+      message: 'Demo login is disabled in production.'
+    });
+  }
   try {
     const { role, email } = req.body;
     const allUsers = await members.findAll();
@@ -79,7 +58,7 @@ async function demoLogin(req, res, next) {
 
     const token = jwt.sign(
       { googleId: user.googleId, id: user.id, role: user.role },
-      process.env.JWT_SECRET || 'lab_management_jwt_default_secret_key',
+      process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
 

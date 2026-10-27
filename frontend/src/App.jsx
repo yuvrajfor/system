@@ -378,7 +378,7 @@ function Login({ onLoginSuccess }) {
 
           {/* Google OAuth Modal Button */}
           <button
-            onClick={() => setGoogleModal(true)}
+            onClick={() => { window.location.href = `${apiUrl}/api/auth/google`; }}
             className="w-full flex items-center justify-center gap-3 px-4 py-2.5 rounded-xl font-semibold text-xs text-slate-300 bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 transition"
           >
             <Mail size={15} />
@@ -837,9 +837,9 @@ function AdminSlotsTab({ showToast }) {
                       <span className="text-[10px] font-bold text-sky-400 uppercase tracking-wider block">
                         Booked Candidate
                       </span>
-                      <p className="font-bold text-white mt-0.5">{slot.booking.candidate.name}</p>
+                      <p className="font-bold text-white mt-0.5">{slot.booking.candidate?.name || "Unknown candidate"}</p>
                       <p className="text-[11px] text-slate-400 font-mono">
-                        {slot.booking.candidate.email}
+                        {slot.booking.candidate?.email || "No email"}
                       </p>
                       {slot.booking.notes && (
                         <p className="text-[11px] text-slate-300 mt-1 italic">

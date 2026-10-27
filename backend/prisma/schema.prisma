@@ -65,7 +65,7 @@ model InterviewSlot {
   updatedAt DateTime @updatedAt
 
   admin User @relation("AdminCreatedSlots", fields: [adminId], references: [id], onDelete: Cascade)
-  booking Booking?
+  booking Booking[]
   feedbacks Feedback[]
   tasks ImprovementTask[]
 
@@ -81,7 +81,7 @@ enum BookingStatus {
 
 model Booking {
   id String @id @default(uuid())
-  slotId String @unique
+  slotId String
   candidateId String
   status BookingStatus @default(CONFIRMED)
   notes String?

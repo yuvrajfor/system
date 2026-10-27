@@ -7,6 +7,10 @@ const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env.local') });
 require('dotenv').config();
+if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
+  console.error('ERROR: JWT_SECRET must be configured with at least 32 characters.');
+  process.exit(1);
+}
 
 const configurePassport = require('./config/passport');
 configurePassport(passport);
@@ -29,7 +33,7 @@ app.use(
       if (allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production') {
         return callback(null, true);
       }
-      return callback(null, true); // Allow during preview deployments
+      return callback(new Error('Origin not allowed by CORS.'));
     },
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
