@@ -560,11 +560,11 @@ function Callback({ onLoginSuccess }) {
 // ==========================================
 // SIDEBAR NAVIGATION
 // ==========================================
-function Sidebar({ user, activeTab, setActiveTab, onLogout }) {
+function Sidebar({ user, activeTab, setActiveTab, onLogout, open = false, onClose = () => { } }) {
   const isAdmin = ['SUPER_ADMIN', 'SYNDICATE_LEAD'].includes(user.role);
 
   return (
-    <aside className="w-64 bg-slate-950 border-r border-slate-800/80 flex flex-col justify-between p-4 shrink-0 h-screen sticky top-0">
+    <aside className={`w-64 bg-slate-950 border-r border-slate-800/80 flex flex-col justify-between p-4 shrink-0 h-screen overflow-y-auto fixed inset-y-0 left-0 z-50 transition-transform duration-200 lg:sticky lg:top-0 lg:translate-x-0 ${open ? 'translate-x-0' : '-translate-x-full'}`}>
       <div>
         {/* Brand */}
         <div className="flex items-center gap-3 px-2 py-3 border-b border-slate-800/80">
@@ -576,6 +576,14 @@ function Sidebar({ user, activeTab, setActiveTab, onLogout }) {
             <span className="block text-[10px] text-indigo-400 font-mono">
               {isAdmin ? 'ADMIN CONTROL' : 'CANDIDATE PORTAL'}
             </span>
+            <button
+              type="button"
+              aria-label="Close navigation"
+              onClick={onClose}
+              className="lg:hidden ml-auto p-1.5 rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white"
+            >
+              <X size={16} />
+            </button>
           </div>
         </div>
 
@@ -2532,6 +2540,7 @@ function Dashboard({ user, onLogout }) {
   const [members, setMembers] = useState([]);
   const [syndicates, setSyndicates] = useState([]);
   const [toast, setToast] = useState(null);
+  const [navOpen, setNavOpen] = useState(false);
 
   const showToast = (message, type = 'success') => setToast({ message, type });
 
@@ -2552,18 +2561,40 @@ function Dashboard({ user, onLogout }) {
 
   return (
     <div className="min-h-screen flex bg-slate-950 font-sans text-slate-100">
+
       {/* Sidebar */}
+      {navOpen && (
+        <div
+          className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-40 lg:hidden"
+          onClick={() => setNavOpen(false)}
+        />
+      )}
       <Sidebar
         user={user}
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={(tab) => {
+          setActiveTab(tab);
+          setNavOpen(false);
+        }}
         onLogout={onLogout}
+        open={navOpen}
+        onClose={() => setNavOpen(false)}
       />
+
 
       {/* Main Workspace Body */}
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         {/* Top Navbar */}
-        <header className="h-16 border-b border-slate-800/80 px-8 flex items-center justify-between bg-slate-950/70 backdrop-blur-md sticky top-0 z-30">
+        <header className="h-16 border-b border-slate-800/80 px-4 sm:px-8 flex items-center justify-between bg-slate-950/70 backdrop-blur-md sticky top-0 z-30">
+          <button
+            type="button"
+            aria-label="Open navigation"
+            onClick={() => setNavOpen(true)}
+            className="lg:hidden mr-1 p-2 -ml-2 rounded-lg text-slate-300 hover:bg-slate-900"
+          >
+            <Menu size={18} />
+          </button>
+
           <div className="flex items-center gap-2 text-xs">
             <span className="text-slate-400">NTL</span>
             <span className="text-slate-600">/</span>
@@ -2591,7 +2622,7 @@ function Dashboard({ user, onLogout }) {
         </header>
 
         {/* Tab Content */}
-        <main className="p-8 flex-1 max-w-6xl w-full mx-auto">
+        <main className="p-4 sm:p-8 flex-1 max-w-6xl w-full mx-auto">
           {/* ADMIN PANELS */}
           {activeTab === 'slots' && <AdminSlotsTab showToast={showToast} />}
           {activeTab === 'candidates' && <AdminCandidatesTab showToast={showToast} />}
